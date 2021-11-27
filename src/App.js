@@ -67,7 +67,9 @@ function App() {
     <RootContainer>
 
       <Header>
-        <img src={logo} alt="logo" />
+        <a href="https://www.waproject.com.br/" target="_blank" rel="noreferrer">
+          <img src={logo} alt="logo" />
+        </a>
       </Header>
 
       <MainColumn maxWidth="md">
