@@ -1,14 +1,22 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 function App() {
   return (
-    <Routes>
+    <>
 
-      <Route path="*" element={<h1>Quiz</h1>} />
-      <Route path="/result" element={<h1>Result</h1>} />
+      <Button variant="contained" color="primary">
+        Hello World
+      </Button>
 
-    </Routes>
+      <Routes>
+
+        <Route path="*" element={<h1>Quiz</h1>} />
+        <Route path="/result" element={<h1>Result</h1>} />
+
+      </Routes>
+    </>
   );
 }
 
