@@ -1,14 +1,14 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
+
+const MainContainer = styled.div`
+
+`
 
 function App() {
   return (
-    <>
-
-      <Button variant="contained" color="primary">
-        Hello World
-      </Button>
+    <MainContainer>
 
       <Routes>
 
@@ -16,7 +16,8 @@ function App() {
         <Route path="/result" element={<h1>Result</h1>} />
 
       </Routes>
-    </>
+
+    </MainContainer>
   );
 }
 
