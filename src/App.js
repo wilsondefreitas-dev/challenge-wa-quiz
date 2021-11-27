@@ -55,7 +55,7 @@ const Footer = styled.div`
   color: gray;
 
   a:link, a:visited{
-    color: rgb(77, 129, 213);
+    color: rgb(0, 71, 186);
     text-decoration: none;
     font-weight: bold;
   }
