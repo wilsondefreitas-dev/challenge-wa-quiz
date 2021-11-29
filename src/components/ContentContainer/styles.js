@@ -2,6 +2,25 @@ import styled from 'styled-components';
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 
+export const Title = styled.div`
+
+    text-align: center;
+
+    h1, h2{
+
+        color: black;
+        margin-top: 0;
+
+    }
+
+    span{
+
+        color: rgb(0, 71, 186);
+
+    }
+
+`;
+
 export const CustomButton = styled(Button)`
 
     width: 55%;
@@ -37,18 +56,37 @@ export const CustomInput = styled(Input)`
 
 `;
 
-export const Title = styled.div`
+export const Option = styled.button`
 
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
     text-align: center;
+    border-radius: 1rem;
+    border: 2px solid #dedede;
+    cursor: pointer;
+    
+    :hover{
 
-    h1{
-
-        color: black;
-        margin-top: 0;
+        border-color: rgb(77, 129, 213);
+        background-color: white;
 
     }
 
-    span{
+    :disabled {
+        
+        pointer-events: none;
+
+    }
+
+`;
+
+export const QuestionCounter = styled.div`
+    
+    border-bottom: 1px solid #dedede;
+    margin-bottom: 0.5rem;
+
+    b{
 
         color: rgb(0, 71, 186);
 

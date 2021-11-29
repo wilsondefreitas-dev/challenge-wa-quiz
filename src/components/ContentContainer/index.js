@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Intro from './Intro';
 import Confirmation from './Confirmation';
+import Quiz from './Quiz';
 
 const RootContainer = styled.div`
 
@@ -32,7 +33,8 @@ const ContentContainer = () => {
         <RootContainer>
 
             {/* <Intro /> */}
-            <Confirmation />
+            {/* <Confirmation /> */}
+            <Quiz />
 
 
         </RootContainer>
