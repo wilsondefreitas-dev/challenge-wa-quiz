@@ -40,10 +40,10 @@ const Quiz = () => {
 
                     <Option id={index} onClick={handleOptionOnClick} disabled={disabledOptions}>{answer}</Option>
 
-
                 ))
 
             }
+
         </>
 
     )

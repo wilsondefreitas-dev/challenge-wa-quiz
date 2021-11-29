@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Intro from './Intro';
 import Confirmation from './Confirmation';
 import Quiz from './Quiz';
+import Result from './Result';
 
 const RootContainer = styled.div`
 
@@ -34,7 +35,8 @@ const ContentContainer = () => {
 
             {/* <Intro /> */}
             {/* <Confirmation /> */}
-            <Quiz />
+            {/* <Quiz /> */}
+            <Result />
 
 
         </RootContainer>
