@@ -1,54 +1,5 @@
 import React, { useState } from "react";
-import styled from 'styled-components';
-import Button from "@material-ui/core/Button";
-import Input from "@material-ui/core/Input";
-
-
-const CustomButton = styled(Button)`
-
-    width: 55%;
-    margin-top: 1rem;
-
-    background-color: rgb(77, 129, 213);
-    color: white;
-
-    :hover{
-        background-color: rgb(0, 71, 186);
-    }
-`;
-
-const CustomInput = styled(Input)`
-
-    width: 150px;
-    margin-top: 1rem;
-    
-    font-size: 2rem;
-    
-    input{
-
-        text-align: center;
-
-    }
-`;
-
-const Title = styled.div`
-
-    text-align: center;
-
-    h1{
-
-        color: black;
-        margin-top: 0;
-
-    }
-
-    span{
-
-        color: rgb(0, 71, 186);
-
-    }
-
-`;
+import { CustomButton, CustomInput, Title } from './styles';
 
 const Intro = () => {
 
