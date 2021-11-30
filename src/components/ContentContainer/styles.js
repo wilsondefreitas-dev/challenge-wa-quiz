@@ -93,3 +93,19 @@ export const QuestionCounter = styled.div`
     }
 
 `;
+
+export const Feedback = styled.div`
+
+    .correct{
+
+        color: forestgreen;
+
+    }
+
+    .wrong{
+
+        color: red;
+
+    }
+
+`;

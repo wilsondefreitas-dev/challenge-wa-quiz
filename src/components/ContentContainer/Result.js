@@ -1,5 +1,6 @@
 import React from 'react';
 import { CustomButton, CustomButtonSecundary, Title } from './styles';
+import { TotalQuestionsContext } from '../../contexts';
 
 const Result = () => {
 

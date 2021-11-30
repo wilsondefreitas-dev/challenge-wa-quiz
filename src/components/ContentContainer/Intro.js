@@ -7,7 +7,7 @@ const valueLimits = { max: 50, min: 1 };
 const Intro = () => {
 
     const [initButtonEnabled, setInitButtonDesabled] = useState(true);
-    const [showReviewLastResult, setShowReviewLastResult] = useState(false);
+    const [showReviewLastResult] = useState(false);
 
     const { setTotalQuestions } = useContext(TotalQuestionsContext);
     const { setCurrentComponent } = useContext(CurrentComponentContext);
