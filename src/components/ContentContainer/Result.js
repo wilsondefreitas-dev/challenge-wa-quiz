@@ -10,6 +10,18 @@ const Result = () => {
 
     console.log(quizData);
 
+    const handleOnClickReview = () => {
+
+        setCurrentComponent('Quiz');
+
+    }
+
+    const handleOnClickPlayAgain = () => {
+
+        setCurrentComponent('Intro');
+
+    }
+
     return (
 
         <>
@@ -18,8 +30,8 @@ const Result = () => {
                 <h2>Acertos: <span>{quizData.score}</span> | Erros: {totalQuestions - quizData.score}</h2>
             </Title>
 
-            <CustomButton >Rever Respostas</CustomButton>
-            <CustomButtonSecundary>Jogar novamente</CustomButtonSecundary>
+            <CustomButton onClick={handleOnClickReview}>Rever Respostas</CustomButton>
+            <CustomButtonSecundary onClick={handleOnClickPlayAgain}>Jogar novamente</CustomButtonSecundary>
 
         </>
 
