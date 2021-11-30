@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext, createRef } from "react";
 import { CustomButton, CustomInput, Title } from './styles';
+import { TotalQuestionsContext } from "../../contexts";
+
+const valueLimits = { max: 50, min: 1 };
 
 const Intro = () => {
 
     const [initButtonEnabled, setInitButtonEnabled] = useState(true);
     const [showReviewLastResult, setShowReviewLastResult] = useState(false);
-
-    const valueLimits = { max: 50, min: 1 };
+    const { setTotalQuestions } = useContext(TotalQuestionsContext);
+    const inputElement = createRef();
 
     const handleInputOnChange = (e) => {
 
@@ -14,38 +17,45 @@ const Intro = () => {
 
         const { value } = e.target;
 
-        const haveData = value.length > 0;
-        const haveMoreThan2Chars = value.length > 2;
-        const valueIsBiggerThanMaxLimit = value > valueLimits.max;
-        const valueIsSmallerThanMinLimit = value < (valueLimits.min - 1);
+        const isEmpty = !(value.length > 0);
+        const moreThan2Chars = value.length > 2;
+        const biggeThanMaxLimit = value > valueLimits.max;
+        const smallerThanMinLimit = value < (valueLimits.min - 1);
 
-        if (haveMoreThan2Chars) e.target.value = value.slice(0, 2);
+        if (moreThan2Chars) e.target.value = value.slice(0, 2);
 
-        if (valueIsBiggerThanMaxLimit) {
+        if (biggeThanMaxLimit) {
 
             e.target.value = valueLimits.max;
 
-        } else if (valueIsSmallerThanMinLimit) {
+        } else if (smallerThanMinLimit) {
 
             e.target.value = valueLimits.min;
 
         }
 
-        setInitButtonEnabled(!haveData);
+        setInitButtonEnabled(isEmpty);
 
     };
+
+    const handleOnClickConfirm = () => {
+
+        setTotalQuestions(inputElement.current.children[0].value);
+
+    }
 
     return (
 
         <>
+
             <Title>
                 <h1>Olá, seja bem-vindo ao <span>Quiz Challenge da Wa</span>!</h1>
                 Insira no campo abaixo o número total de questões que você deseja responder (máx. 50).
             </Title>
 
-            <CustomInput type="number" onChange={handleInputOnChange} />
+            <CustomInput ref={inputElement} type="number" onChange={handleInputOnChange} />
 
-            <CustomButton disabled={initButtonEnabled}>Confirmar</CustomButton>
+            <CustomButton onClick={handleOnClickConfirm} disabled={initButtonEnabled}>Confirmar</CustomButton>
 
             {
                 showReviewLastResult &&

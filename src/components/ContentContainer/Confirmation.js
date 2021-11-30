@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { CustomButton, CustomButtonSecundary, Title } from './styles';
+import { TotalQuestionsContext } from "../../contexts"
 
 const Confirmation = () => {
 
-    const [QuestionsNum, setQuestionsNum] = useState(10);
+    const { totalQuestions } = useContext(TotalQuestionsContext);
 
-    const getLabel = () => `${QuestionsNum} ${(QuestionsNum === 1) ? 'questão' : 'questões'}`;
+    const getLabel = () => {
+
+        return `${totalQuestions} ${(totalQuestions === 1) ? 'questão' : 'questões'}`;
+
+    }
 
     return (
 
@@ -21,5 +26,6 @@ const Confirmation = () => {
     )
 
 }
+
 
 export default Confirmation;

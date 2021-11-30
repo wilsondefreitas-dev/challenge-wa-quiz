@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Intro from './Intro';
 import Confirmation from './Confirmation';
 import Quiz from './Quiz';
 import Result from './Result';
+
+import { TotalQuestionsContext } from "../../contexts";
 
 const RootContainer = styled.div`
 
@@ -29,15 +31,20 @@ const RootContainer = styled.div`
 
 const ContentContainer = () => {
 
+    const [totalQuestions, setTotalQuestions] = useState(0);
+
     return (
 
         <RootContainer>
 
-            {/* <Intro /> */}
-            {/* <Confirmation /> */}
-            {/* <Quiz /> */}
-            <Result />
+            <TotalQuestionsContext.Provider value={{ totalQuestions, setTotalQuestions }}>
 
+                <Intro />
+                {/* <Confirmation /> */}
+                {/* <Quiz /> */}
+                {/* <Result /> */}
+
+            </TotalQuestionsContext.Provider >
 
         </RootContainer>
 

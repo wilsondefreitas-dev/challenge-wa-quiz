@@ -1,7 +1,7 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import ContentContainer from './components/ContentContainer';
 import logo from './logo.svg';
 
@@ -77,7 +77,6 @@ function App() {
         <Routes>
 
           <Route path="*" element={<ContentContainer />} />
-          <Route path="/result" element={<h1>Result</h1>} />
 
         </Routes>
 
