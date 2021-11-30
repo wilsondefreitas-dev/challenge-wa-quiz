@@ -5,7 +5,7 @@ import Confirmation from './Confirmation';
 import Quiz from './Quiz';
 import Result from './Result';
 
-import { TotalQuestionsContext, CurrentComponentContext } from "../../contexts";
+import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from "../../contexts";
 
 const RootContainer = styled.div`
 
@@ -33,6 +33,7 @@ const ContentContainer = () => {
 
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [currentComponent, setCurrentComponent] = useState('Intro');
+    const [quizData, setQuizData] = useState({ score: 0, questions: [], answers: [] });
 
     const components = {
 
@@ -49,9 +50,11 @@ const ContentContainer = () => {
 
             <TotalQuestionsContext.Provider value={{ totalQuestions, setTotalQuestions }}>
                 <CurrentComponentContext.Provider value={{ setCurrentComponent }}>
+                    <QuizDataContext.Provider value={{ quizData, setQuizData }}>
 
-                    {components[currentComponent]}
+                        {components[currentComponent]}
 
+                    </QuizDataContext.Provider >
                 </CurrentComponentContext.Provider >
             </TotalQuestionsContext.Provider >
 

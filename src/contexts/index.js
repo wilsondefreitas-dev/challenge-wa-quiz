@@ -13,3 +13,10 @@ export const CurrentComponentContext = createContext({
     setCurrentComponent: (value) => { }
 
 })
+
+export const QuizDataContext = createContext({
+
+    quizData: { score: 0, questions: [], answers: [] },
+    setQuizData: (value) => { }
+
+});

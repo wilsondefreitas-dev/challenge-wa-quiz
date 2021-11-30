@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import { Option, Title, QuestionCounter, Feedback } from './styles';
-import { TotalQuestionsContext, CurrentComponentContext } from '../../contexts';
+import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from '../../contexts';
 
 import Axios from 'axios';
 
@@ -14,7 +14,6 @@ const questionsReducer = (state, action) => {
 
         case 'LOAD_COMPLETE':
 
-            sessionQuestions = action.payload;
             return { data: action.payload, loading: false, error: false };
 
         case 'LOAD_ERROR':
@@ -29,24 +28,91 @@ const questionsReducer = (state, action) => {
 
 }
 
+const answerReducer = (state, action) => {
+
+    switch (action.type) {
+
+        case 'CORRECT_ANSWER':
+
+            return { isAnswered: true, isCorrect: true };
+
+        case 'WRONG_ANSWER':
+
+            return { isAnswered: true, isCorrect: false };
+
+        case 'RESET':
+
+            return { isAnswered: false, isCorrect: false };
+
+        default:
+
+            throw new Error();
+
+    }
+
+}
+
 const Quiz = () => {
 
     const [questions, dispatchQuestions] = useReducer(questionsReducer, { data: [], loading: true, error: false });
+    const [answers, dispatchAnswers] = useReducer(answerReducer, { isAnswered: false, isCorrect: false });
 
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [isAnswered, setIsAnswered] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
     const [userScore, setUserScore] = useState(0);
 
     const { setCurrentComponent } = useContext(CurrentComponentContext);
     const { totalQuestions } = useContext(TotalQuestionsContext);
+    const { setQuizData } = useContext(QuizDataContext);
 
-    useEffect(() => {
+    //
+
+    const getAnswers = useCallback((question) => {
+
+        const incorrectAnswersObjs = question.incorrect_answers.map((answer, index) => {
+
+            return {
+                answer: renderAsHTML(answer),
+                correct: false,
+                id: index
+            }
+
+        });
+
+        const correctAnswersObj = {
+            answer: renderAsHTML(question.correct_answer),
+            correct: true,
+            id: incorrectAnswersObjs.length
+        };
+
+        return [...incorrectAnswersObjs, correctAnswersObj].sort(() => .5 - Math.random());
+
+    }, []);
+
+    const getConfiguredPayload = useCallback((questions) => {
+
+        return questions.map((question, index) => {
+
+            const answers = getAnswers(question);
+
+            return {
+                question: renderAsHTML(question.question),
+                answers: answers,
+                id: index
+            }
+
+        });
+
+    }, [getAnswers]);
+
+    const fecthData = useCallback(async () => {
 
         Axios.get(`${API_ENDPOINT}${totalQuestions}`)
             .then(response => {
 
-                dispatchQuestions({ type: 'LOAD_COMPLETE', payload: response.data.results });
+                const dataConfigured = getConfiguredPayload(response.data.results);
+
+                dispatchQuestions({ type: 'LOAD_COMPLETE', payload: dataConfigured });
+                sessionQuestions = dataConfigured;
 
             })
             .catch(error => {
@@ -55,13 +121,28 @@ const Quiz = () => {
 
             });
 
-    }, [totalQuestions])
+    }, [getConfiguredPayload, totalQuestions]);
+
+    //
+
+    useEffect(() => {
+
+        fecthData();
+
+    }, [fecthData]);
+
+    useEffect(() => {
+
+        setQuizData({ score: userScore, questions: sessionQuestions, answers: userAnswers });
+
+    }, [userScore, setQuizData]);
+
+    //
 
     const handleOptionOnClick = (e) => {
 
         const { className, id } = e.target;
 
-        setIsAnswered(true);
         checkIfIsCorrect(className);
 
         userAnswers.push(id);
@@ -76,12 +157,12 @@ const Quiz = () => {
 
         if (answerIsCorrect) {
 
-            setIsCorrect(true);
+            dispatchAnswers({ type: 'CORRECT_ANSWER' });
             setUserScore(userScore + 1);
 
         } else {
 
-            setIsCorrect(false);
+            dispatchAnswers({ type: 'WRONG_ANSWER' });
 
         }
 
@@ -96,7 +177,7 @@ const Quiz = () => {
             if (isNotLastQuestion) {
 
                 setCurrentQuestion(currentQuestion + 1);
-                setIsAnswered(false);
+                dispatchAnswers({ type: 'RESET' });
 
             } else {
 
@@ -104,26 +185,7 @@ const Quiz = () => {
 
             }
 
-        }, 1500);
-
-    }
-
-    const getAnswers = () => {
-
-        const question = questions.data[currentQuestion];
-
-        const incorrect_answers = question.incorrect_answers;
-        const correct_answer = question.correct_answer;
-
-        const incorrectAnswersObjs = incorrect_answers.map((answer, index) => {
-
-            return { answer: renderAsHTML(answer), correct: false, id: index }
-
-        });
-
-        const correctAnswersObj = { answer: renderAsHTML(correct_answer), correct: true, id: incorrectAnswersObjs.length };
-
-        return [...incorrectAnswersObjs, correctAnswersObj].sort(() => .5 - Math.random());
+        }, 500);
 
     }
 
@@ -157,14 +219,14 @@ const Quiz = () => {
 
                 {
 
-                    getAnswers().map(value =>
+                    questions.data[currentQuestion].answers.map(value =>
 
                         <Option
                             id={value.id}
                             className={value.correct ? 'correct' : 'incorrect'}
                             key={value.answer}
                             onClick={handleOptionOnClick}
-                            disabled={isAnswered}>
+                            disabled={answers.isAnswered}>
 
                             {value.answer}
 
@@ -176,9 +238,9 @@ const Quiz = () => {
 
                 {
 
-                    isAnswered && <Feedback>
+                    answers.isAnswered && <Feedback>
 
-                        {isCorrect ?
+                        {answers.isCorrect ?
                             <h3 className="correct">{'Parabéns! você acertou a resposta!'}</h3> :
                             <h3 className="wrong">{'Que pena! você errou a resposta!'}</h3>}
 
