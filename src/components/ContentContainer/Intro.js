@@ -1,14 +1,17 @@
 import React, { useState, useContext, createRef } from "react";
 import { CustomButton, CustomInput, Title } from './styles';
-import { TotalQuestionsContext } from "../../contexts";
+import { TotalQuestionsContext, CurrentComponentContext } from "../../contexts";
 
 const valueLimits = { max: 50, min: 1 };
 
 const Intro = () => {
 
-    const [initButtonEnabled, setInitButtonEnabled] = useState(true);
+    const [initButtonEnabled, setInitButtonDesabled] = useState(true);
     const [showReviewLastResult, setShowReviewLastResult] = useState(false);
+
     const { setTotalQuestions } = useContext(TotalQuestionsContext);
+    const { setCurrentComponent } = useContext(CurrentComponentContext);
+
     const inputElement = createRef();
 
     const handleInputOnChange = (e) => {
@@ -34,13 +37,14 @@ const Intro = () => {
 
         }
 
-        setInitButtonEnabled(isEmpty);
+        setInitButtonDesabled(isEmpty);
 
     };
 
     const handleOnClickConfirm = () => {
 
         setTotalQuestions(inputElement.current.children[0].value);
+        setCurrentComponent('Confirmation');
 
     }
 

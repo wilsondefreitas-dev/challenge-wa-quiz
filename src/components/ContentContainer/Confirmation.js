@@ -1,14 +1,27 @@
 import React, { useContext } from "react";
 import { CustomButton, CustomButtonSecundary, Title } from './styles';
-import { TotalQuestionsContext } from "../../contexts"
+import { TotalQuestionsContext, CurrentComponentContext } from "../../contexts"
 
 const Confirmation = () => {
 
     const { totalQuestions } = useContext(TotalQuestionsContext);
+    const { setCurrentComponent } = useContext(CurrentComponentContext);
 
     const getLabel = () => {
 
         return `${totalQuestions} ${(totalQuestions === 1) ? 'questão' : 'questões'}`;
+
+    }
+
+    const handleOnClickConfirm = () => {
+
+        setCurrentComponent('Quiz');
+
+    }
+
+    const handleOnClickCancel = () => {
+
+        setCurrentComponent('Intro');
 
     }
 
@@ -18,8 +31,8 @@ const Confirmation = () => {
 
             <Title><h1>Você tem certeza que deseja <br />iniciar com <span>{getLabel()}</span>?</h1></Title>
 
-            <CustomButton>Confirmar</CustomButton>
-            <CustomButtonSecundary variant="text">Cancelar</CustomButtonSecundary>
+            <CustomButton onClick={handleOnClickConfirm}>Confirmar</CustomButton>
+            <CustomButtonSecundary onClick={handleOnClickCancel} variant="text">Cancelar</CustomButtonSecundary>
 
         </>
 

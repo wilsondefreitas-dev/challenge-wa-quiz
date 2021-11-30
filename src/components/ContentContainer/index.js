@@ -5,7 +5,7 @@ import Confirmation from './Confirmation';
 import Quiz from './Quiz';
 import Result from './Result';
 
-import { TotalQuestionsContext } from "../../contexts";
+import { TotalQuestionsContext, CurrentComponentContext } from "../../contexts";
 
 const RootContainer = styled.div`
 
@@ -32,18 +32,27 @@ const RootContainer = styled.div`
 const ContentContainer = () => {
 
     const [totalQuestions, setTotalQuestions] = useState(0);
+    const [currentComponent, setCurrentComponent] = useState('Intro');
+
+    const components = {
+
+        Intro: <Intro />,
+        Confirmation: <Confirmation />,
+        Quiz: <Quiz />,
+        Result: <Result />
+
+    };
 
     return (
 
         <RootContainer>
 
             <TotalQuestionsContext.Provider value={{ totalQuestions, setTotalQuestions }}>
+                <CurrentComponentContext.Provider value={{ setCurrentComponent }}>
 
-                <Intro />
-                {/* <Confirmation /> */}
-                {/* <Quiz /> */}
-                {/* <Result /> */}
+                    {components[currentComponent]}
 
+                </CurrentComponentContext.Provider >
             </TotalQuestionsContext.Provider >
 
         </RootContainer>

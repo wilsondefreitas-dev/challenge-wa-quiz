@@ -6,3 +6,10 @@ export const TotalQuestionsContext = createContext({
     setTotalQuestions: (value) => { }
 
 });
+
+export const CurrentComponentContext = createContext({
+
+    currentComponent: 'Intro',
+    setCurrentComponent: (value) => { }
+
+})
