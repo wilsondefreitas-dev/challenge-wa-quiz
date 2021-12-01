@@ -88,9 +88,10 @@ export const Option = styled.button`
     border: 2px solid #dedede;
     cursor: pointer;
 
-    color: ${({ selected }) => (selected) && 'white'};
-    font-weight: ${({ selected }) => selected ? 'bold' : 'normal'};
+    color: ${({ selected, showFeedback, correct }) => (showFeedback && !selected) ? 'forestgreen' : (selected) && 'white'};
+    font-weight: ${({ selected, showFeedback }) => (selected || showFeedback) ? 'bold' : 'normal'};
     background-color: ${({ correct, selected }) => selected && (correct ? 'forestgreen' : 'orangered')};
+    border-color: ${({ selected, showFeedback, correct }) => (showFeedback && !selected) && 'forestgreen'};
     
     :hover{
 

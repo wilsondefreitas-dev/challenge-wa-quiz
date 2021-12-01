@@ -1,4 +1,4 @@
-import React, { useState, useContext, createRef } from "react";
+import React, { useState, useContext, createRef, useEffect } from "react";
 import { CustomButton, CustomInput, Title } from './../styles';
 import { totalQuestionLimits } from "./../constants";
 
@@ -13,7 +13,7 @@ const Intro = () => {
     const { setCurrentComponent } = useContext(CurrentComponentContext);
 
     const [showReviewLastResult] = useState(false);
-    const [initButtonEnabled, setInitButtonDesabled] = useState(true);
+    const [initButtonDisabled, setInitButtonDisabled] = useState(true);
 
     const inputElement = createRef();
 
@@ -40,7 +40,7 @@ const Intro = () => {
 
         }
 
-        setInitButtonDesabled(isEmpty);
+        setInitButtonDisabled(isEmpty);
 
     };
 
@@ -50,6 +50,23 @@ const Intro = () => {
         setCurrentComponent('Confirmation');
 
     };
+
+    const handleKeyPress = (event) => {
+
+        if (event.key === 'Enter') {
+
+            if (!initButtonDisabled) handleOnClickConfirm();
+
+        }
+
+    }
+
+    useEffect(() => {
+
+        inputElement.current.children[0].focus();
+
+        // eslint-disable-next-line 
+    }, []);
 
     return (
 
@@ -62,11 +79,12 @@ const Intro = () => {
 
             </Title>
 
-            <CustomInput ref={inputElement} type="number" onChange={handleInputOnChange} />
+            <CustomInput ref={inputElement} type="number" onChange={handleInputOnChange} onKeyPress={handleKeyPress} />
 
-            <CustomButton onClick={handleOnClickConfirm} disabled={initButtonEnabled}>Confirmar</CustomButton>
+            <CustomButton onClick={handleOnClickConfirm} disabled={initButtonDisabled}>Confirmar</CustomButton>
 
-            {showReviewLastResult && <CustomButton>Ver resultado da última sessão</CustomButton>}
+            {
+                showReviewLastResult && <CustomButton>Ver resultado da última sessão</CustomButton>}
 
         </>
 

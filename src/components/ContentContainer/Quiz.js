@@ -1,7 +1,8 @@
 import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 import Axios from 'axios';
 import { API_ENDPOINT } from './../constants';
-import { Option, Title, QuestionCounter, Feedback } from './../styles';
+import { Option, Title, QuestionCounter, Feedback, CustomButton } from './../styles';
 import { renderAsHTML } from './../utils';
 
 import {
@@ -26,6 +27,7 @@ const Quiz = () => {
     }, { isAnswered: false, isCorrect: false });
 
     const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [reviewMode, setRevieMode] = useState(false);
 
     const { currentQuestions, setCurrentQuestions } = useContext(QuizDataContext);
     const { userAnswers, setUserAnswers } = useContext(QuizDataContext);
@@ -78,11 +80,13 @@ const Quiz = () => {
 
         } else {
 
+            setRevieMode(true);
             setCurrentQuestions(currentQuestions);
 
         }
 
-    }, [fecthData, currentQuestions, setCurrentQuestions]);
+        // eslint-disable-next-line 
+    }, []);
 
     const handleOptionOnClick = (e) => {
 
@@ -94,6 +98,12 @@ const Quiz = () => {
         if (currentQuestion < currentQuestions.length) goNextQuestion(e.target);
 
     }
+
+    const handleOnClickReviewNextQuestion = () => {
+
+        goNextQuestion();
+
+    };
 
     const checkIfIsCorrect = (elementClass) => {
 
@@ -129,7 +139,7 @@ const Quiz = () => {
 
             }
 
-        }, 1500);
+        }, reviewMode ? 0 : 1500);
 
     }
 
@@ -162,11 +172,16 @@ const Quiz = () => {
                             key={value.answer}
                             className={value.correct ? 'correct' : 'incorrect'}
                             onClick={handleOptionOnClick}
-                            selected={value.id === userAnswers[currentQuestion]}
+                            selected={(value.id === userAnswers[currentQuestion])}
                             correct={(value.correct)}
-                            disabled={answer.isAnswered}>
+                            showFeedback={(value.correct && reviewMode)}
+                            disabled={answer.isAnswered || reviewMode}>
 
-                            {value.answer}
+                            {
+
+                                value.answer
+
+                            }
 
                         </Option>
 
@@ -183,6 +198,15 @@ const Quiz = () => {
                             <h3 className="wrong">{'Que pena! você errou a resposta!'}</h3>}
 
                     </Feedback>
+
+                }
+
+                {
+
+                    reviewMode &&
+                    <CustomButton onClick={handleOnClickReviewNextQuestion}>
+                        {currentQuestion + 1 === parseInt(totalQuestions) ? 'Ver resultado' : 'Ver próxima questão'}
+                    </CustomButton>
 
                 }
 
