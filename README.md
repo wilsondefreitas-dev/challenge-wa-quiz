@@ -8,4 +8,4 @@ In the project directory, you can run:
 
 ### `npm start`
 
-View Web App: [https://challenge-wa-quiz-3gb040glz-wilsondefreitas-dev.vercel.app/](https://challenge-wa-quiz-3gb040glz-wilsondefreitas-dev.vercel.app/)
+View Web App: [https://challenge-wa-quiz.vercel.app/](https://challenge-wa-quiz.vercel.app/)
