@@ -12,7 +12,7 @@ const Intro = () => {
     const { setTotalQuestions } = useContext(TotalQuestionsContext);
     const { setCurrentComponent } = useContext(CurrentComponentContext);
 
-    const [showReviewLastResult] = useState(false);
+    const [showReviewLastResult, setShowReviewLastResult] = useState(false);
     const [initButtonDisabled, setInitButtonDisabled] = useState(true);
 
     const inputElement = createRef();
@@ -51,6 +51,12 @@ const Intro = () => {
 
     };
 
+    const handleOnClickReview = () => {
+
+        setCurrentComponent('Result');
+
+    };
+
     const handleKeyPress = (event) => {
 
         if (event.key === 'Enter') {
@@ -59,11 +65,12 @@ const Intro = () => {
 
         }
 
-    }
+    };
 
     useEffect(() => {
 
         inputElement.current.children[0].focus();
+        if (window.localStorage.getItem('lastSessionData')) setShowReviewLastResult(true);
 
         // eslint-disable-next-line 
     }, []);
@@ -84,7 +91,9 @@ const Intro = () => {
             <CustomButton onClick={handleOnClickConfirm} disabled={initButtonDisabled}>Confirmar</CustomButton>
 
             {
-                showReviewLastResult && <CustomButton>Ver resultado da última sessão</CustomButton>}
+                showReviewLastResult && <CustomButton onClick={handleOnClickReview}>Ver resultado da última sessão</CustomButton>
+
+            }
 
         </>
 

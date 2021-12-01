@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import ArrowForward from '@material-ui/icons/ArrowForward';
 import Axios from 'axios';
 import { API_ENDPOINT } from './../constants';
 import { Option, Title, QuestionCounter, Feedback, CustomButton } from './../styles';

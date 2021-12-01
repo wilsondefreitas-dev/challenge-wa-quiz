@@ -46,7 +46,7 @@ export const Title = styled.div`
 export const CustomButton = styled(Button)`
 
     width: 55%;
-    margin: 1rem 0;
+    margin-top: 1rem;
 
     background-color: rgb(77, 129, 213);
     color: white;
@@ -60,6 +60,7 @@ export const CustomButton = styled(Button)`
 export const CustomButtonSecundary = styled(Button)`
 
     width: 55%;
+    margin-top: 1rem;
 
 `;
 
