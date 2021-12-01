@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
-import { CustomButton, CustomButtonSecundary, Title } from './styles';
-import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from '../../contexts';
+import { CustomButton, CustomButtonSecundary, Title } from './../styles';
+import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from "./../contexts.js";
 
 const Result = () => {
 
-    const { totalQuestions } = useContext(TotalQuestionsContext);
-    const { setCurrentComponent } = useContext(CurrentComponentContext);
-    const { quizData } = useContext(QuizDataContext);
+    const { setCurrentQuestions } = useContext(QuizDataContext);
+    const { userScore, setUserScore } = useContext(QuizDataContext);
+    const { setUserAnswers } = useContext(QuizDataContext);
+    const { totalQuestions, setTotalQuestions } = useContext(TotalQuestionsContext);
 
-    console.log(quizData);
+    const { setCurrentComponent } = useContext(CurrentComponentContext);
 
     const handleOnClickReview = () => {
 
@@ -18,7 +19,18 @@ const Result = () => {
 
     const handleOnClickPlayAgain = () => {
 
+        resetData();
+
         setCurrentComponent('Intro');
+
+    }
+
+    const resetData = () => {
+
+        setUserScore(0);
+        setUserAnswers([]);
+        setTotalQuestions(0);
+        setCurrentQuestions([]);
 
     }
 
@@ -27,7 +39,7 @@ const Result = () => {
         <>
             <Title>
                 <h1>Resultado:</h1>
-                <h2>Acertos: <span>{quizData.score}</span> | Erros: {totalQuestions - quizData.score}</h2>
+                <h2>Acertos: <span>{userScore}</span> | Erros: {totalQuestions - userScore}</h2>
             </Title>
 
             <CustomButton onClick={handleOnClickReview}>Rever Respostas</CustomButton>

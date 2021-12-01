@@ -1,39 +1,24 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import Intro from './Intro';
 import Confirmation from './Confirmation';
 import Quiz from './Quiz';
 import Result from './Result';
+import { RootContainer } from './../styles';
 
-import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from "../../contexts";
-
-const RootContainer = styled.div`
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    min-height: 600px;
-    
-    padding: 3rem;
-    border-radius: 2rem;
-    border: 2px solid rgb(77, 129, 213);
-
-    @media (max-height: 760px) {
-
-        height: 100%;
-
-    }
-
-`;
+import {
+    TotalQuestionsContext,
+    CurrentComponentContext,
+    QuizDataContext
+} from "./../contexts.js";
 
 const ContentContainer = () => {
 
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [currentComponent, setCurrentComponent] = useState('Intro');
-    const [quizData, setQuizData] = useState({ score: 0, questions: [], answers: [] });
+
+    const [userScore, setUserScore] = useState(0);
+    const [currentQuestions, setCurrentQuestions] = useState([]);
+    const [userAnswers, setUserAnswers] = useState([]);
 
     const components = {
 
@@ -48,15 +33,15 @@ const ContentContainer = () => {
 
         <RootContainer>
 
-            <TotalQuestionsContext.Provider value={{ totalQuestions, setTotalQuestions }}>
-                <CurrentComponentContext.Provider value={{ setCurrentComponent }}>
-                    <QuizDataContext.Provider value={{ quizData, setQuizData }}>
+            <CurrentComponentContext.Provider value={{ setCurrentComponent }}>
+                <TotalQuestionsContext.Provider value={{ totalQuestions, setTotalQuestions }}>
+                    <QuizDataContext.Provider value={{ userScore, setUserScore, currentQuestions, setCurrentQuestions, userAnswers, setUserAnswers }}>
 
                         {components[currentComponent]}
 
                     </QuizDataContext.Provider >
-                </CurrentComponentContext.Provider >
-            </TotalQuestionsContext.Provider >
+                </TotalQuestionsContext.Provider >
+            </CurrentComponentContext.Provider >
 
         </RootContainer>
 

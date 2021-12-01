@@ -1,88 +1,48 @@
 import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import { Option, Title, QuestionCounter, Feedback } from './styles';
-import { TotalQuestionsContext, CurrentComponentContext, QuizDataContext } from '../../contexts';
-
 import Axios from 'axios';
+import { API_ENDPOINT } from './../constants';
+import { Option, Title, QuestionCounter, Feedback } from './../styles';
+import { renderAsHTML } from './../utils';
 
-const API_ENDPOINT = 'https://opentdb.com/api.php?amount=';
-let userAnswers = [];
-let sessionQuestions = [];
-
-const questionsReducer = (state, action) => {
-
-    switch (action.type) {
-
-        case 'LOAD_COMPLETE':
-
-            return { data: action.payload, loading: false, error: false };
-
-        case 'LOAD_ERROR':
-
-            return { data: [], loading: false, error: true };
-
-        default:
-
-            throw new Error();
-
-    }
-
-}
-
-const answerReducer = (state, action) => {
-
-    switch (action.type) {
-
-        case 'CORRECT_ANSWER':
-
-            return { isAnswered: true, isCorrect: true };
-
-        case 'WRONG_ANSWER':
-
-            return { isAnswered: true, isCorrect: false };
-
-        case 'RESET':
-
-            return { isAnswered: false, isCorrect: false };
-
-        default:
-
-            throw new Error();
-
-    }
-
-}
+import {
+    QuizDataContext,
+    TotalQuestionsContext,
+    CurrentComponentContext,
+} from '../contexts';
 
 const Quiz = () => {
 
-    const [questions, dispatchQuestions] = useReducer(questionsReducer, { data: [], loading: true, error: false });
-    const [answers, dispatchAnswers] = useReducer(answerReducer, { isAnswered: false, isCorrect: false });
+    const [answer, dispatchAnswer] = useReducer((state, action) => {
+
+        switch (action.type) {
+
+            case 'CORRECT_ANSWER': return { isAnswered: true, isCorrect: true };
+            case 'WRONG_ANSWER': return { isAnswered: true, isCorrect: false };
+            case 'RESET': return { isAnswered: false, isCorrect: false };
+            default: throw new Error();
+
+        }
+
+    }, { isAnswered: false, isCorrect: false });
 
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [userScore, setUserScore] = useState(0);
+
+    const { currentQuestions, setCurrentQuestions } = useContext(QuizDataContext);
+    const { userAnswers, setUserAnswers } = useContext(QuizDataContext);
+    const { userScore, setUserScore } = useContext(QuizDataContext);
+    const { totalQuestions } = useContext(TotalQuestionsContext);
 
     const { setCurrentComponent } = useContext(CurrentComponentContext);
-    const { totalQuestions } = useContext(TotalQuestionsContext);
-    const { setQuizData } = useContext(QuizDataContext);
-
-    //
 
     const getAnswers = useCallback((question) => {
 
         const incorrectAnswersObjs = question.incorrect_answers.map((answer, index) => {
 
-            return {
-                answer: renderAsHTML(answer),
-                correct: false,
-                id: index
-            }
+            return { answer: renderAsHTML(answer), correct: false, id: index }
 
         });
 
-        const correctAnswersObj = {
-            answer: renderAsHTML(question.correct_answer),
-            correct: true,
-            id: incorrectAnswersObjs.length
-        };
+        const correctAnswersObj = { answer: renderAsHTML(question.correct_answer), correct: true, id: incorrectAnswersObjs.length };
 
         return [...incorrectAnswersObjs, correctAnswersObj].sort(() => .5 - Math.random());
 
@@ -90,17 +50,11 @@ const Quiz = () => {
 
     const getConfiguredPayload = useCallback((questions) => {
 
-        return questions.map((question, index) => {
+        return questions.map((question, index) => ({
 
-            const answers = getAnswers(question);
+            question: renderAsHTML(question.question), answers: getAnswers(question), id: index
 
-            return {
-                question: renderAsHTML(question.question),
-                answers: answers,
-                id: index
-            }
-
-        });
+        }));
 
     }, [getAnswers]);
 
@@ -110,44 +64,34 @@ const Quiz = () => {
             .then(response => {
 
                 const dataConfigured = getConfiguredPayload(response.data.results);
-
-                dispatchQuestions({ type: 'LOAD_COMPLETE', payload: dataConfigured });
-                sessionQuestions = dataConfigured;
+                setCurrentQuestions(dataConfigured);
 
             })
-            .catch(error => {
 
-                dispatchQuestions({ type: 'LOAD_ERROR' });
-
-            });
-
-    }, [getConfiguredPayload, totalQuestions]);
-
-    //
+    }, [setCurrentQuestions, getConfiguredPayload, totalQuestions]);
 
     useEffect(() => {
 
-        fecthData();
+        if (currentQuestions.length === 0) {
 
-    }, [fecthData]);
+            fecthData();
 
-    useEffect(() => {
+        } else {
 
-        setQuizData({ score: userScore, questions: sessionQuestions, answers: userAnswers });
+            setCurrentQuestions(currentQuestions);
 
-    }, [userScore, setQuizData]);
+        }
 
-    //
+    }, [fecthData, currentQuestions, setCurrentQuestions]);
 
     const handleOptionOnClick = (e) => {
 
         const { className, id } = e.target;
 
         checkIfIsCorrect(className);
+        setUserAnswers([...userAnswers, parseInt(id)]);
 
-        userAnswers.push(id);
-
-        if (currentQuestion < questions.data.length) goNextQuestion(e.target);
+        if (currentQuestion < currentQuestions.length) goNextQuestion(e.target);
 
     }
 
@@ -157,12 +101,12 @@ const Quiz = () => {
 
         if (answerIsCorrect) {
 
-            dispatchAnswers({ type: 'CORRECT_ANSWER' });
+            dispatchAnswer({ type: 'CORRECT_ANSWER' });
             setUserScore(userScore + 1);
 
         } else {
 
-            dispatchAnswers({ type: 'WRONG_ANSWER' });
+            dispatchAnswer({ type: 'WRONG_ANSWER' });
 
         }
 
@@ -172,12 +116,12 @@ const Quiz = () => {
 
         setTimeout(() => {
 
-            const isNotLastQuestion = (currentQuestion < questions.data.length - 1);
+            const isNotLastQuestion = (currentQuestion < currentQuestions.length - 1);
 
             if (isNotLastQuestion) {
 
                 setCurrentQuestion(currentQuestion + 1);
-                dispatchAnswers({ type: 'RESET' });
+                dispatchAnswer({ type: 'RESET' });
 
             } else {
 
@@ -185,23 +129,15 @@ const Quiz = () => {
 
             }
 
-        }, 500);
-
-    }
-
-    const renderAsHTML = (str) => {
-
-        const element = document.createElement("textarea");
-        element.innerHTML = str;
-        return element.value
+        }, 1500);
 
     }
 
     return (
 
-        questions.data.length <= 0 ?
+        currentQuestions.length <= 0 ?
 
-            ((questions.error) ? <h3>Ocorreu algum erro, tente novamente.</h3> : <h3>Carregando questões...</h3>) :
+            (<h3>Carregando questões...</h3>) :
 
             (<>
 
@@ -213,34 +149,36 @@ const Quiz = () => {
 
                 <Title>
 
-                    <h2>{renderAsHTML(questions.data[currentQuestion].question)}</h2>
+                    <h2>{renderAsHTML(currentQuestions[currentQuestion].question)}</h2>
 
                 </Title>
 
                 {
 
-                    questions.data[currentQuestion].answers.map(value =>
+                    currentQuestions[currentQuestion].answers.map(value => {
 
-                        <Option
+                        return <Option
                             id={value.id}
-                            className={value.correct ? 'correct' : 'incorrect'}
                             key={value.answer}
+                            className={value.correct ? 'correct' : 'incorrect'}
                             onClick={handleOptionOnClick}
-                            disabled={answers.isAnswered}>
+                            selected={value.id === userAnswers[currentQuestion]}
+                            correct={(value.correct)}
+                            disabled={answer.isAnswered}>
 
                             {value.answer}
 
                         </Option>
 
-                    )
+                    })
 
                 }
 
                 {
 
-                    answers.isAnswered && <Feedback>
+                    answer.isAnswered && <Feedback>
 
-                        {answers.isCorrect ?
+                        {answer.isCorrect ?
                             <h3 className="correct">{'Parabéns! você acertou a resposta!'}</h3> :
                             <h3 className="wrong">{'Que pena! você errou a resposta!'}</h3>}
 

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { CustomButton, CustomButtonSecundary, Title } from './styles';
-import { TotalQuestionsContext, CurrentComponentContext } from "../../contexts"
+import { CustomButton, CustomButtonSecundary, Title } from '../styles';
+import { TotalQuestionsContext, CurrentComponentContext } from "./../contexts.js";
 
 const Confirmation = () => {
 
@@ -29,7 +29,11 @@ const Confirmation = () => {
 
         <>
 
-            <Title><h1>Você tem certeza que deseja <br />iniciar com <span>{getLabel()}</span>?</h1></Title>
+            <Title>
+
+                <h1>Você tem certeza que deseja <br />iniciar com <span>{getLabel()}</span>?</h1>
+
+            </Title>
 
             <CustomButton onClick={handleOnClickConfirm}>Confirmar</CustomButton>
             <CustomButtonSecundary onClick={handleOnClickCancel} variant="text">Cancelar</CustomButtonSecundary>

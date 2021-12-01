@@ -2,6 +2,28 @@ import styled from 'styled-components';
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 
+export const RootContainer = styled.div`
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 600px;
+    
+    padding: 3rem;
+    border-radius: 2rem;
+    border: 2px solid rgb(77, 129, 213);
+
+    @media (max-height: 760px) {
+
+        height: 100%;
+
+    }
+
+`;
+
 export const Title = styled.div`
 
     text-align: center;
@@ -65,6 +87,10 @@ export const Option = styled.button`
     border-radius: 1rem;
     border: 2px solid #dedede;
     cursor: pointer;
+
+    color: ${({ selected }) => (selected) && 'white'};
+    font-weight: ${({ selected }) => selected ? 'bold' : 'normal'};
+    background-color: ${({ correct, selected }) => selected && (correct ? 'forestgreen' : 'orangered')};
     
     :hover{
 

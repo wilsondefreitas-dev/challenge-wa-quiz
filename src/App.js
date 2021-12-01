@@ -1,4 +1,3 @@
-import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import Container from '@material-ui/core/Container';
@@ -82,7 +81,7 @@ function App() {
 
       </MainColumn>
 
-      <Footer>/by.<a href="https://github.com/wilsondefreitas-dev" target="_blank" rel="noreferrer">Wilsondef</a></Footer>
+      <Footer>/by.<a href="https://github.com/wilsondefreitas-dev" target="_blank" rel="noreferrer">wilsondef</a></Footer>
 
     </RootContainer>
   );
